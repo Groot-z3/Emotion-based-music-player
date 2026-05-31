@@ -6,7 +6,6 @@ import threading
 import time
 import streamlit as st
 
-# ─── Emotion map ───
 EMO = {
     "happy":    {"emoji": "😊", "color": "#1DB954", "q": "happy upbeat feel good hits"},
     "sad":      {"emoji": "😢", "color": "#74b9ff", "q": "sad emotional heartbreak songs"},
@@ -43,7 +42,6 @@ def detect_mood_live(placeholder, duration=5):
     if not cap.isOpened():
         return None, "Could not access webcam"
 
-    # Shared mutable state between main-loop and analysis thread
     state = {"emotion": "scanning...", "history": [], "busy": False}
     lock = threading.Lock()
 
@@ -78,7 +76,6 @@ def detect_mood_live(placeholder, duration=5):
         now = time.time()
         remaining = max(0, duration - elapsed)
 
-        # Kick off a DeepFace analysis every ~1.5 s (if not already busy)
         with lock:
             is_busy = state["busy"]
         if not is_busy and (now - last_trigger) > 1.5:
@@ -88,11 +85,10 @@ def detect_mood_live(placeholder, duration=5):
             threading.Thread(target=_analyze, args=(frame.copy(),),
                              daemon=True).start()
 
-        # Read latest emotion for the overlay
         with lock:
             emo_text = state["emotion"]
 
-        # ── Draw overlay ──
+        # Draw overlay
         h, w = frame.shape[:2]
         overlay = frame.copy()
         cv2.rectangle(overlay, (0, h - 34), (w, h), (0, 0, 0), -1)

@@ -4,24 +4,15 @@ import html as html_lib
 from detection import EMO, detect_mood_live, preload_model
 from music import get_songs, player_html
 
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# Page config
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 st.set_page_config(
     page_title="EmotionBasedMusicPlayer",
     page_icon="🎵",
     layout="centered",
     initial_sidebar_state="collapsed",
 )
-
-# Pre-load DeepFace model once (cached across reruns)
 preload_model()
 
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# CSS — single card, Spotify-minimal
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+#CSS
 st.markdown("""<style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 *{font-family:'Inter',sans-serif!important;box-sizing:border-box}
@@ -144,18 +135,10 @@ div[data-testid="column"] div[data-testid="stVerticalBlock"]{
 }
 </style>""", unsafe_allow_html=True)
 
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# SESSION STATE
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 for k, v in {"pl": [], "pe": None, "np": None, "ni": -1, "cur": "neutral"}.items():
     if k not in st.session_state:
         st.session_state[k] = v
 
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# UI — EMOTION DISPLAY
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 cur = st.session_state["cur"]
 ec = EMO.get(cur, EMO["neutral"])
 
@@ -165,16 +148,11 @@ st.markdown(f"""
     <span class="l" style="color:{ec['color']}">{cur}</span>
 </div>""", unsafe_allow_html=True)
 
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# UI — DETECT MOOD BUTTON (rendered directly, no wrapper)
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 _, btn_col, _ = st.columns([1, 2, 1])
 with btn_col:
     detect_clicked = st.button("Detect Mood", type="primary",
                                use_container_width=True)
 
-# Placeholder for live video — only filled during detection
 video_area = st.empty()
 
 if detect_clicked:
@@ -194,10 +172,6 @@ if detect_clicked:
 
 st.markdown('<div class="dv"></div>', unsafe_allow_html=True)
 
-
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# UI — NOW PLAYING + STOP  (above playlist so it's always visible)
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 if st.session_state["np"]:
     st.markdown('<div class="npl">♫ now playing</div>', unsafe_allow_html=True)
     st.components.v1.html(
@@ -205,7 +179,6 @@ if st.session_state["np"]:
         height=82,
         scrolling=False,
     )
-    # Stop button with red accent styling
     st.markdown('<div class="stop-wrap">', unsafe_allow_html=True)
     _, sc, _ = st.columns([1, 2, 1])
     with sc:
@@ -217,9 +190,8 @@ if st.session_state["np"]:
     st.markdown('<div class="dv"></div>', unsafe_allow_html=True)
 
 
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 # UI — PLAYLIST
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 songs = st.session_state["pl"]
 
 if songs:
