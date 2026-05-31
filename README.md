@@ -102,9 +102,7 @@ emotion-based-music-player/
 
 ## Screenshots
 
-Add screenshots of the Streamlit interface here.
+<img width="599" height="390" alt="image" src="https://github.com/user-attachments/assets/7ca345d9-021f-486d-9602-c54ab207360f" />
 
-```md
-![Home Screen](assets/home.png)
-![Emotion Detection](assets/detection.png)
-```
+<img width="551" height="904" alt="image" src="https://github.com/user-attachments/assets/1b00b23c-f5be-4bd3-8ea3-725e81457991" />
+
